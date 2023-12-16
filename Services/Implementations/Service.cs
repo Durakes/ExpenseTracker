@@ -1,6 +1,5 @@
-
-using ExpenseTracker.Repository;
-
+using ExpenseTracker.Repositories;
+using ExpenseTracker.Helpers;
 namespace ExpenseTracker.Services;
 public class Service<TEntity> : IService<TEntity> where TEntity : class
 {
@@ -9,25 +8,52 @@ public class Service<TEntity> : IService<TEntity> where TEntity : class
     {
         _repository = repository;
     }
-    public async Task<IEnumerable<TEntity>> GetAll()
+    public async Task<ResultList<TEntity>> GetAll()
     {
-        return await _repository.GetAll();
+        IEnumerable<TEntity> resultList = await _repository.GetAll();
+        
+        ResultList<TEntity> result = new()
+        {
+            IsEmpty = false,
+            Value = resultList,
+            Message = "List of Entities full"
+        };
+
+        if(!resultList.ToList().Any())
+        {
+            result.IsEmpty = true;
+            result.Message = "List is Empty";
+        }
+        
+        return result;
     }
-    public async Task<TEntity> GetById(int id)
+    public async Task<ResultObject<TEntity>> GetById(int id)
     {
-        TEntity? entity =  await _repository.GetById(id);
-        return entity;
+        TEntity? entity = await _repository.GetById(id);
+        ResultObject<TEntity> result = new()
+        {
+            Success = true,
+            Value = entity,
+            Message = $"Entity with ID {id} found."
+
+        };
+        if (entity is null)
+        {
+            result.Success = false;
+            result.Message = $"Entity with ID {id} not found.";
+        }
+        return result;
     }
-    public Task Add(TEntity entity)
+    public async Task Add(TEntity entity)
     {
-        throw new NotImplementedException();
+        await _repository.Add(entity);
     }
-    public Task Update(TEntity entity)
+    public async Task Update(TEntity entity)
     {
-        throw new NotImplementedException();
+        await _repository.Update(entity);
     }
-    public Task Delete(TEntity entity)
+    public async Task Delete(TEntity entity)
     {
-        throw new NotImplementedException();
+        await _repository.Delete(entity);
     }
 }

@@ -7,6 +7,6 @@ public class Income : Transaction
     [ForeignKey("IncomeCategory")]
     [Column("category_id")]
     public int CategoryID { get; set; }
-    public virtual required IncomeCategory  IncomeCategory {get;set;}
+    public virtual IncomeCategory IncomeCategory { get; set; } = null!;
     #endregion
 }

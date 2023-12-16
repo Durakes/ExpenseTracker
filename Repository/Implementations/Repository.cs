@@ -1,6 +1,6 @@
 using ExpenseTracker.Data;
 using Microsoft.EntityFrameworkCore;
-namespace ExpenseTracker.Repository;
+namespace ExpenseTracker.Repositories;
 public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
 {
     protected readonly ApplicationDbContext _context;

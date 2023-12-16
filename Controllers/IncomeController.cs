@@ -1,21 +1,41 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using ExpenseTracker.Models;
+using ExpenseTracker.ViewModels;
+using ExpenseTracker.Services;
 
 namespace ExpenseTracker.Controllers;
 
 public class IncomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private IService<Income> _service;
+    private IService<IncomeCategory> _serviceCategory;
 
-    public IncomeController(ILogger<HomeController> logger)
+    public IncomeController(IService<Income> service, IService<IncomeCategory> serviceCategory)
     {
-        _logger = logger;
+        _service = service;
+        _serviceCategory = serviceCategory;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View();
+        var listIncomeCategory = await _serviceCategory.GetAll();
+        return View(listIncomeCategory.Value);
+    }
+    [HttpPost]
+    public async Task<IActionResult> Create(NewIncome newIncome)
+    {
+        Income income = new()
+        {
+            Title = newIncome.Title,
+            Amount = newIncome.Amount,
+            CategoryID = newIncome.CategoryID,
+            Description = newIncome.Description,
+            RecordDate = newIncome.RecordDate
+        };
+
+        await _service.Add(income);
+        return RedirectToAction("Index","Home");
     }
 
     public IActionResult Privacy()

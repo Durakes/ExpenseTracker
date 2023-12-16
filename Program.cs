@@ -1,11 +1,17 @@
+using System.Reflection;
 using System.Text.Json.Serialization;
 using ExpenseTracker.Data;
 using Microsoft.EntityFrameworkCore;
+using ExpenseTracker.Repositories;
+using ExpenseTracker.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 // Add services to the container.
+builder.Services.AddScoped(typeof(IService<>), typeof(Service<>));
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddControllers().AddJsonOptions(x =>

@@ -1,4 +1,4 @@
-namespace ExpenseTracker.Repository;
+namespace ExpenseTracker.Repositories;
 public interface IRepository<TEntity> where TEntity : class
 {
     Task<TEntity?> GetById(int id);

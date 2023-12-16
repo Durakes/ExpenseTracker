@@ -1,3 +1,4 @@
+@model List<IncomeCategory>
 @{
     ViewData["Title"] = "Income Page";
 }
@@ -5,5 +6,31 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <h3 class="display-6">Crear Ingreso</h3>
-    <p>Acá va el formulario</p>
+    @using (Html.BeginForm("Create", "Income", FormMethod.Post))
+    {
+        <div class="mb-3">
+            <label for="Title" class="form-label">Title:</label>
+            <input type="text" name="Title" class="form-control">
+            <label for="Amount" class="form-label">Amount:</label>
+            <input type="number" name="Amount" class="form-control"
+            step="0.01" pattern="\d+(\.\d{1,2})?" title="Enter a valid number with up to two decimal places">
+            <label for="RecordDate" class="form-label">Date:</label>
+            <input type="date" name="RecordDate" class="form-control">
+            <label for="CategoryID">Category</label>
+            <select name="CategoryID" class="form-select" required>
+                <option disabled selected style="display:none;">Seleccione una prioridad
+                </option>
+                @foreach (var category in Model)
+                {
+                    <option value="@category.ID">
+                        @category.Name
+                    </option>
+                }
+            </select>
+            <label for="Description" class="form-label">Description:</label>
+            <textarea class="form-control" name="Description" rows="3"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Enviar</button>
+    }
 </div>
